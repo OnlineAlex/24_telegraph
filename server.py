@@ -10,7 +10,7 @@ from models import Article, ArticleBlock
 
 app = Flask(__name__)
 csrf = CSRFProtect(app)
-app.config.from_object(config.Config)
+app.config.from_object(config.DevelopmentConfig)
 SimpleMDE(app)
 
 try:
