@@ -15,8 +15,8 @@ def get_article_path(article_url, app_dir=basedir):
 class Config(object):
     DEBUG = False
     TESTING = False
-    SECRET_KEY = ['SECRET_KEY']
-    WTF_CSRF_SECRET_KEY = ['CSRF_SECRET_KEY']
+    SECRET_KEY = os.environ['SECRET_KEY']
+    WTF_CSRF_SECRET_KEY = os.environ['CSRF_SECRET_KEY']
     TEMPLATES_AUTO_RELOAD = True
     SESSION_COOKIE_SECURE = True
     SIMPLEMDE_JS_IIFE = True
