@@ -2,6 +2,8 @@ import os
 from flask import Flask, render_template, request, redirect, make_response
 from flask_simplemde import SimpleMDE
 from flask_wtf import CSRFProtect
+from flask_sslify import SSLify
+
 
 import config
 import db
@@ -10,8 +12,9 @@ from models import Article, ArticleBlock
 
 app = Flask(__name__)
 csrf = CSRFProtect(app)
-app.config.from_object(config.DevelopmentConfig)
+app.config.from_object(config.Config)
 SimpleMDE(app)
+sslify = SSLify(app)
 
 try:
     os.mkdir(os.path.join(config.basedir, 'articles'))
@@ -55,11 +58,20 @@ def content(article_url):
     article_access_key = db.get_access_key(article_url)
     with open(article_path) as page:
         article_block = page.read()
-
+    article = ArticleBlock(article_block)
     if request.cookies.get('access') == article_access_key:
-        return render_template('article-page.html', title='title', content=article_block, is_author=True)
+        return render_template(
+            'article-page.html',
+            title=article.get_title(),
+            content=article_block,
+            is_author=True
+        )
     else:
-        return render_template('article-page.html', title='title', content=article_block)
+        return render_template(
+            'article-page.html',
+            title=article.get_title(),
+            content=article_block
+        )
 
 
 @app.route('/<article_url>', methods=['POST'])

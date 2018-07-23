@@ -18,7 +18,6 @@ class Config(object):
     SECRET_KEY = os.environ['SECRET_KEY']
     WTF_CSRF_SECRET_KEY = os.environ['CSRF_SECRET_KEY']
     TEMPLATES_AUTO_RELOAD = True
-    SESSION_COOKIE_SECURE = True
     SIMPLEMDE_JS_IIFE = True
     SIMPLEMDE_USE_CDN = True
 
