@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block article %}
+  <div class="row">
+  <div class="col-lg-8 col-md-10 offset-lg-2 offset-md-1">
+  {{ content|safe }}
+    </div>
+  {% if is_author %}
+  <div class="col-lg-2 my-lg-2 offset-md-1 offset-lg-0">
+    <form method="POST">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+      <input type="hidden" name="state" value="edit article"/>
+      <button class="btn btn-outline-dark font-weight-bold" type="submit">Редактировать</button>
+    </form>
+  </div>{% endif %}
+  </div>
+{% endblock %}

@@ -1,49 +1,119 @@
-<!DOCTYPE html>
-<html lang="ru">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="Anonymous">
-    <meta name="author" content="">
-    <link rel="icon" href="favicon.ico">
-
-    <title>Anonymous</title>
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-
-  </head>
-
-  <body>
-
-    <nav class="navbar">
-      <div class="container">
-        <div class="navbar-header">
-          <a class="navbar-brand" href="/">Anonymous</a>
+{% extends 'base.html' %}
+{% block article %}
+      <form method="POST" class="row offset-md-1">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+      {% if article_text %}<input type="hidden" name="state" value="save article"/>{% endif %}
+        <div class="form-group col-lg-8 col-md-10 offset-lg-2 offset-md-1">
+          <input name="title" class="form-control-plaintext title" placeholder="Заголовок..." {% if title %}value="{{ title }}"{% endif %} required autocomplete="off"/>
+          <input name="signature" class="form-control-plaintext small" placeholder="Автор" {% if author %}value="{{ author }}"{% endif %}/>
+          <textarea name="article" id="editor" class="form-control-plaintext" placeholder="Текст" autocomplete="off"></textarea>
         </div>
+
+        <div class="form-group col-lg-2 my-lg-2 offset-md-1 offset-lg-0">
+          <button class="btn btn-outline-dark font-weight-bold" type="submit" onclick="renderHTML()">Опубликовать</button>
+          <button type="button" class="btn bg-transparent mt-lg-3" data-toggle="modal" data-target="#exampleModalLong">
+            <i class="fa fa-question-circle fa-2x"></i>
+          </button>
+
+<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Форматирование Markdown</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
-    </nav>
+      <div class="modal-body">
+        <h4>Выделение</h4>
+        <pre>
+**<strong>Жирный (CTRL+B)</strong>**
+*<em>курсив (CTRL+I)</em>*
+~~<strike>перечеркнутый (CTRL+H)</strike>~~</pre>
+        <h4>Заголовки</h4>
+        <pre><h1 id="-"># Большой</h1>
+<h2 id="-">## Средний</h2>
+<h3 id="-">### Маленький</h3>
+<h4 id="-">#### Очень маленький</h4></pre>
+        <h4>Списки</h4>
+        <pre>
+<li>Ненумерованнй элемент</li>
+* Ненумерованнй элемент (CTRL+L)
+* Ненумерованнй элемент (CTRL+L)
+* Ненумерованнй элемент (CTRL+L)
 
-    <div class="container">
-      <form method="POST">
-        <div class="form-group">
-          <input name="header" class="form-control" placeholder="Заголовок" autofocus/>
-        </div>
-        <div class="form-group">
-          <input name="signature" class="form-control" placeholder="Подпись"/>
-        </div>
-        <div class="form-group">
-          <textarea name="body" class="form-control" rows="10" placeholder="Ваша история"></textarea>
-        </div>
-        <div class="form-group">
-          <button class="btn btn-primary" type="submit">Опубликовать</button>
+1. Нумерованнй элемент (CTRL+ALT+L)
+2. Нумерованнй элемент (CTRL+ALT+L)
+3. Нумерованнй элемент (CTRL+ALT+L)</pre>
+        <h4>Ссылки (CTRL+ALT+L)</h4>
+        <pre>
+<a href="http://www.example.com">Текст ссылки</a>
+[Текст ссылки](http://www.example.com)
+</pre>
+        <h4>Цитаты (CTRL+')</h4>
+        <pre><blockquote>Это цитата<br>Это вторая строка цитаты</blockquote>
+> Это цитата
+> Это вторая строка цитаты</pre>
+        <h4>Изображения (CTRL+ALT+I)</h4>
+        <small>Нужен адрес картинки? <a href="http://imgur.com/" target="_blank">Imgur</a> — бесплатный хостинг изображений</small>
+        <pre>
+<img src="{{ url_for('static', filename='img/logo.svg') }}" alt="Тектс изображения">
+![Тектс изображения](http://www.example.com/image.jpg)</pre>
+        <h4>Таблицы</h4>
+        <pre><table>
+<thead>
+<tr>
+<th>Колонка 1</th>
+<th>Колонка 2</th>
+<th>Колонка 3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Дима</td>
+<td>Иванов</td>
+<td>Мужской</td>
+</tr>
+<tr>
+<td>Марина</td>
+<td>Петрова</td>
+<td>Женский</td>
+</tr>
+</tbody>
+</table>
+| Колонка 1 | Колонка 2 | Колонка 3 |
+| --------- | --------- | --------- |
+| Дима      | Иванов    | Мужской   |
+| Марина    | Петрова   | Женский   |
+
+<em>Или без выравниваняия столбцов...</em>
+
+| Колонка 1 | Колонка 2 | Колонка 3 |
+| --------- | --------- | --------- |
+| Дима | Иванов | Мужской |
+| Марина | Петрова | Женский |</pre>
+        <h4>Демонстрация кода</h4><code>var example = "hello!";</code>
+<pre><code>var example = "hello!";
+alert(example);
+</code></pre>
+        <pre>`var example = "hello!";`
+
+<em>Если несколько строк...</em>
+
+```
+var example = "hello!";
+alert(example);
+```</pre>
+        <p>CTRL+P - предпоказ<br>
+          F11 - во весь экран<br>
+          F9 - редактирование+предпоказ</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
         </div>
       </form>
-    </div><!-- /.container -->
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-  </body>
-</html>
+      {% endblock %}
