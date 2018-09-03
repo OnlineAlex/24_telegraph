@@ -4,37 +4,118 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="author" content="{{ author }}">
+  <meta name="robots" content="noindex, nofollow" />
     <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
     <title>{% if title %}{{ title }}{% else %}Новая статья{% endif %}</title>
     {% if not hide_simplemde %}
-    {{ simplemde.css }}
-    {{ simplemde.js }}
     {% endif %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/simplemde.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/androidstudio.css') }}">
+  <script src="{{ url_for('static', filename='js/highlight.pack.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/simplemde.min.js') }}"></script>
+
   </head>
   <body>
+  <div class="preloader" id="load" style="display: none">
+  <h1>Cooking in progress..</h1>
+<div id="cooking">
+  <div class="bubble"></div>
+  <div class="bubble"></div>
+  <div class="bubble"></div>
+  <div class="bubble"></div>
+  <div class="bubble"></div>
+  <div id="area">
+    <div id="sides">
+      <div id="pan"></div>
+      <div id="handle"></div>
+    </div>
+    <div id="pancake">
+      <div id="pastry"></div>
+    </div>
+  </div>
+</div>
+  </div>
     <div class="container article">
       {% block article %}
       {% endblock %}
      </div>
-
-    {% if not hide_simplemde %}<script>
-        var simplemde = new SimpleMDE({
-          element: document.getElementById("editor"),
+{% if not hide_simplemde %}<script>
+        var simplemde_1 = new SimpleMDE({
+          element: document.getElementById('editor'),
+          autosave: { enabled: true, uniqueId: 1 },
+          toolbar: ["unordered-list", 'link', 'preview', 'side-by-side', 'fullscreen', 'guide'],
           status: false,
-		      toolbar: false,
-        {% if article_text %}initialValue: function(){/* {{ article_text|safe }} */}.toString().slice(14, -3) ,{%  endif %}
+        {% if plan %}initialValue: function(){/*{{ plan|safe }}*/}.toString().slice(13, -3) ,{%  endif %}
           spellChecker: false,
         });
-        function renderHTML() {
-          simplemde.togglePreview();
-          simplemde.value(simplemde.markdown(simplemde.value()))
+        var simplemde_2 = new SimpleMDE({
+          element: document.getElementById('editor1'),
+          autosave: { enabled: true, uniqueId: 2 },
+          toolbar: [
+            {
+			        name: "center",
+			        action: toCenterText,
+			        className: "fa fa-align-center",
+			        title: "Center",
+		        },
+
+            'bold', 'italic', '|',
+            'heading-2', 'heading-3', '|',
+            'code', 'quote', 'horizontal-rule', '|',
+            'unordered-list', 'ordered-list', 'table','|',
+            'link', 'image', {
+			        name: "anchor",
+			        action: setAnchor,
+			        className: "fa fa-anchor",
+			        title: "Anchor",
+		        }, '|',
+            'preview', 'side-by-side', 'fullscreen', 'guide'],
+            renderingConfig: {
+              codeSyntaxHighlighting: true,
+            },
+
+          status: ['autosave', 'words'],
+        {% if article_text %}initialValue: function(){/*{{ article_text|safe }}*/}.toString().slice(13, -3) ,{%  endif %}
+          spellChecker: false,
+        });
+        function renderHtml() {
+          document.getElementById('load').style = ''
+          document.getElementById('plan_html').value = simplemde_1.markdown(simplemde_1.value());
+          document.getElementById('article_html').value = simplemde_2.markdown(simplemde_2.value());
+        }
+        function toCenterText(editor) {
+          var cm = editor.codemirror;
+          var output = '';
+          var selectedText = cm.getSelection();
+          var text = selectedText || '';
+          output = '<center>' + text + '</center>';
+          cm.replaceSelection(output);
+        }
+        function setAnchor(editor) {
+          var cm = editor.codemirror;
+          var output = '<a name="тут"></a>';
+          cm.replaceSelection(output);
         }
     </script>
     {% endif %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script>
+       jQuery("document").ready(function($) {
+
+         var div = $('.editor-toolbar').eq(1);
+         $(window).scroll(function () {
+           if ($(this).scrollTop() > 350) {
+             div.addClass("f-nav");
+           } else {
+             div.removeClass("f-nav");
+           }
+         });
+
+       });
+    </script>
+
   <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
   </body>
 </html>

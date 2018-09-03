@@ -1,5 +1,3 @@
- <h1 id="title">{{ title }}</h1>
-  {% if author %}<p class="small" id="author">{{ author }}</p>{% endif %}
-  <div class="content py-3" id="text">
-  {{ text|safe }}
-  </div>
+<h1 class="py-3" id="title">{{ title }}</h1>
+<div class="content py-3" id="plan">{{ plan|safe }}</div>
+<div class="content py-3" id="text">{{ text|safe }}</div>

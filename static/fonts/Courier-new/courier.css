@@ -1,0 +1,24 @@
+@font-face {
+    font-family: 'Courier New';
+    src: local('Courier New'), local('CourierNew'), url('courier-new.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Courier New';
+    src: local('Courier New Italic'), local('CourierNew-Italic'), url('courier-new-i.ttf') format('truetype');
+    font-weight: 400;
+    font-style: italic;
+}
+@font-face {
+    font-family: 'Courier New';
+    src: local('Courier New Bold'), local('CourierNew-Bold'), url('courier-new-b.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Courier New';
+    src: local('Courier New Bold Italic'), local('CourierNew-BoldItalic'), url('courier-new-bi.ttf') format('truetype');
+    font-weight: 700;
+    font-style: italic;
+}
