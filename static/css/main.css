@@ -212,7 +212,8 @@ a.more-link {
   letter-spacing: 1px;
 }
 
-pre {
+.editor-preview pre,
+.editor-preview-side pre {
     background: none!important;
     margin-bottom: 1rem!important;
 }
